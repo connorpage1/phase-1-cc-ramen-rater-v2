@@ -6,7 +6,10 @@ deliverables tomorrow. */
 //! Global variables
 const ramenMenu = document.querySelector("#ramen-menu")
 const form = document.querySelector("#new-ramen")
+const updateForm = document.querySelector("#edit-ramen")
 
+// Create current ramen variable using let for ramen updating
+let currentRamen = null
 
 /* Function to render ramen when passed a ramen object. Encapsulated in a function so 
 that it can be re-used for form submission as well. */
@@ -38,6 +41,20 @@ const getRamenData = (url) => {
   .catch(err => console.log(err))
 }
 
+// Non-persistent update to the displayed ramen 
+const handleUpdate = (e) => {
+  e.preventDefault();
+
+  currentRamen.rating = e.target["new-rating"].value
+  currentRamen.comment = e.target['new-comment'].value
+
+
+  // Re-render the ramen object that includes the new rating and comment
+  handleClick(currentRamen)
+
+  // reset the form on successful submission
+  e.target.reset()
+}
 const handleSubmit = (e) => {
   e.preventDefault();
 
@@ -56,8 +73,11 @@ const handleSubmit = (e) => {
 
 // Callbacks
 const handleClick = (ramen) => {
+// Set image and alt to selected ramen
 
-  // Set image and alt to selected ramen
+// Set selected ramen to be current ramen for update function
+currentRamen = ramen
+
   const imageTarget = document.querySelector(".detail-image")
   imageTarget.src = ramen.image
   imageTarget.alt = `${ramen.name} from ${ramen.restaurant}`
@@ -83,13 +103,13 @@ const handleClick = (ramen) => {
 const addSubmitListener = () => {
   // Add code
   form.addEventListener("submit", handleSubmit)
+  updateForm.addEventListener("submit", handleUpdate)
 
 }
 
 const displayRamens = () => {
   getRamenData("http://localhost:3000/ramens")
 
-  handleClick()
 };
 
 const main = () => {
