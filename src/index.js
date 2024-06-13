@@ -29,7 +29,12 @@ const parseRamenData = (ramenArray) => {
 const getRamenData = (url) => {
   return fetch(url)
   .then(resp => resp.json())
-  .then(parseRamenData)
+  .then(array => {
+    parseRamenData(array)
+    
+    // open first image on page load
+    handleClick(array[0])
+  })
   .catch(err => console.log(err))
 }
 
@@ -46,6 +51,7 @@ const handleSubmit = (e) => {
   }
 
   renderRamen(newRamen)
+  e.target.reset()
 }
 
 // Callbacks
@@ -82,6 +88,8 @@ const addSubmitListener = () => {
 
 const displayRamens = () => {
   getRamenData("http://localhost:3000/ramens")
+
+  handleClick()
 };
 
 const main = () => {
